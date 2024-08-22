@@ -9,6 +9,7 @@ export type InputType =
   | "text";
 
 export interface Input {
+  id: string | null;
   required: boolean;
   placeholder: string;
   helperText: string;

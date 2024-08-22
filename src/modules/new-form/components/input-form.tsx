@@ -5,6 +5,7 @@ import { Input } from "@/modules/core/components/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/modules/core/components/button";
 import { Switch } from "@/modules/core/components/switch";
 import {
   Mail,
@@ -28,8 +29,10 @@ import {
   FormLabel,
   FormControl,
   FormItem,
+  FormMessage,
 } from "@/modules/core/components/form";
 import { Input as InputType } from "@/types/input";
+import uniqueId from "lodash.uniqueid";
 
 export const InputTypeSchema = z.union([
   z.literal("checkbox"),
@@ -42,17 +45,24 @@ export const InputTypeSchema = z.union([
   z.literal("text"),
 ]);
 
-export const InputSchema = z.object({
-  required: z.boolean(),
-  placeholder: z.string(),
-  helperText: z.string(),
-  type: InputTypeSchema,
-  label: z.string(),
-});
+export const InputSchema = z
+  .object({
+    id: z.string().nullable(),
+    required: z.boolean(),
+    placeholder: z.string(),
+    helperText: z.string(),
+    type: InputTypeSchema,
+    label: z.string().min(1, "Label is required"),
+  })
+  .transform((val) => ({
+    ...val,
+    id: uniqueId(val.label + val.type),
+  }));
 
-type IInputSchema = z.infer<typeof InputSchema>;
+type IInputSchema = z.input<typeof InputSchema>;
 
 const defaultValues: IInputSchema = {
+  id: null,
   required: false,
   label: "",
   placeholder: "",
@@ -75,11 +85,10 @@ const inputs = [
 ];
 
 interface Props {
-  actionButtons?: React.ReactNode;
   onSubmit: (state: InputType) => void;
 }
 
-function InputForm({ actionButtons, onSubmit }: Props) {
+function InputForm({ onSubmit }: Props) {
   const form = useForm<IInputSchema>({
     defaultValues,
     mode: "onChange",
@@ -102,6 +111,7 @@ function InputForm({ actionButtons, onSubmit }: Props) {
                   onChange={field.onChange}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -118,6 +128,7 @@ function InputForm({ actionButtons, onSubmit }: Props) {
                   onChange={field.onChange}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -134,6 +145,7 @@ function InputForm({ actionButtons, onSubmit }: Props) {
                   onChange={field.onChange}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -160,6 +172,7 @@ function InputForm({ actionButtons, onSubmit }: Props) {
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -177,10 +190,18 @@ function InputForm({ actionButtons, onSubmit }: Props) {
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
-        <div className="mt-4 flex justify-center">{actionButtons}</div>
+        <div className="mt-4 flex justify-center">
+          <Button className="h-8 mr-1 w-full" type="submit" variant="outline">
+            Add field
+          </Button>
+          <Button type="button" className="h-8 w-full" variant="destructive">
+            Remove
+          </Button>
+        </div>
       </form>
     </Form>
   );

@@ -7,19 +7,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/modules/core/components/card";
+import InputsContainer from "@/modules/new-form/components/inputs-container";
+import NewFormFooter from "@/modules/new-form/components/new-form-footer";
 
 function NewForm() {
   return (
-    <Card className="h-5/6 w-1/2">
+    <Card className="w-1/2">
       <CardHeader>
         <CardTitle>New Form</CardTitle>
         <CardDescription>Card Description</CardDescription>
       </CardHeader>
-      <CardContent>
-        <p>Card Content</p>
+      <CardContent className="min-h-[500px]">
+        <InputsContainer />
       </CardContent>
       <CardFooter>
-        <p>Card Footer</p>
+        <NewFormFooter />
       </CardFooter>
     </Card>
   );

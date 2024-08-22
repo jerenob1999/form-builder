@@ -10,6 +10,7 @@ type State = {
 type Action = {
   setSelectedInput: (input: State["selectedInput"]) => void;
   setNewInput: (input: Input) => void;
+  removeInput: (id: string | null) => void;
 };
 
 export const useNewFormStore = create<State & Action>()(
@@ -21,6 +22,11 @@ export const useNewFormStore = create<State & Action>()(
       set((state) => ({
         ...state,
         inputs: [...state.inputs, input],
+      }));
+    },
+    removeInput: (id) => {
+      set((state) => ({
+        inputs: state.inputs.filter((input) => input.id !== id),
       }));
     },
   }))
