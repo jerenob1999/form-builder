@@ -2,11 +2,9 @@
 
 import React from "react";
 import { Input } from "@/modules/core/components/input";
-import { useNewFormStore } from "@/modules/core/lib/store";
-import { Button } from "@/modules/core/components/button";
-import { Separator } from "@/modules/core/components/separator";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Switch } from "@/modules/core/components/switch";
 import {
   Mail,
@@ -30,19 +28,31 @@ import {
   FormLabel,
   FormControl,
   FormItem,
-  FormDescription,
-  FormMessage,
 } from "@/modules/core/components/form";
+import { Input as InputType } from "@/types/input";
 
-const NewInputSchema = z.object({
+export const InputTypeSchema = z.union([
+  z.literal("checkbox"),
+  z.literal("date"),
+  z.literal("email"),
+  z.literal("number"),
+  z.literal("radio"),
+  z.literal("range"),
+  z.literal("tel"),
+  z.literal("text"),
+]);
+
+export const InputSchema = z.object({
   required: z.boolean(),
-  label: z.string(),
   placeholder: z.string(),
   helperText: z.string(),
-  type: z.string(),
+  type: InputTypeSchema,
+  label: z.string(),
 });
 
-const defaultValues = {
+type IInputSchema = z.infer<typeof InputSchema>;
+
+const defaultValues: IInputSchema = {
   required: false,
   label: "",
   placeholder: "",
@@ -64,15 +74,21 @@ const inputs = [
   { type: "text", label: "Text", icon: Baseline },
 ];
 
-function NewInput() {
-  const form = useForm({ defaultValues });
-  const { selectedInput } = useNewFormStore((state) => state);
+interface Props {
+  actionButtons?: React.ReactNode;
+  onSubmit: (state: InputType) => void;
+}
 
-  if (!selectedInput) return;
+function InputForm({ actionButtons, onSubmit }: Props) {
+  const form = useForm<IInputSchema>({
+    defaultValues,
+    mode: "onChange",
+    resolver: zodResolver(InputSchema),
+  });
 
   return (
     <Form {...form}>
-      <form>
+      <form onSubmit={form.handleSubmit(onSubmit)} id="new-input">
         <FormField
           control={form.control}
           name="label"
@@ -86,8 +102,6 @@ function NewInput() {
                   onChange={field.onChange}
                 />
               </FormControl>
-              <FormDescription />
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -104,8 +118,6 @@ function NewInput() {
                   onChange={field.onChange}
                 />
               </FormControl>
-              <FormDescription />
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -122,8 +134,6 @@ function NewInput() {
                   onChange={field.onChange}
                 />
               </FormControl>
-              <FormDescription />
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -150,8 +160,6 @@ function NewInput() {
                   ))}
                 </SelectContent>
               </Select>
-              <FormDescription></FormDescription>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -172,18 +180,10 @@ function NewInput() {
             </FormItem>
           )}
         />
+        <div className="mt-4 flex justify-center">{actionButtons}</div>
       </form>
-      <div className="mt-4 flex justify-center">
-        <Button className="h-8 mr-1 w-full" variant="outline">
-          Submit
-        </Button>
-        <Button className="h-8 w-full" variant="destructive">
-          Delete
-        </Button>
-      </div>
-      <Separator className="my-4" />
     </Form>
   );
 }
 
-export default NewInput;
+export default InputForm;
