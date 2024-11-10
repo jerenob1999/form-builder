@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useNewFormStore } from "@/modules/core/lib/store";
+import { useNewFormStore } from "@/modules/lib/store";
 import { Input } from "@/modules/core/components/input";
 import { Label } from "@/modules/core/components/label";
 import { Button } from "@/modules/core/components/button";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useNewFormStore } from "@/modules/core/lib/store";
+import { useNewFormStore } from "@/modules/lib/store";
 import InputForm from "@/modules/new-form/components/input-form";
 import { Separator } from "@/modules/core/components/separator";
 

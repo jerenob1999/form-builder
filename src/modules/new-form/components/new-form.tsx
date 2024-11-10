@@ -7,6 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/modules/core/components/card";
+import { Button } from "@/modules/core/components/button";
+import { CirclePlus } from "lucide-react";
 import InputsContainer from "@/modules/new-form/components/inputs-container";
 import NewFormFooter from "@/modules/new-form/components/new-form-footer";
 
@@ -19,6 +21,9 @@ function NewForm() {
       </CardHeader>
       <CardContent className="min-h-[500px]">
         <InputsContainer />
+        <Button className="rounded-full" type="submit" variant="ghost">
+          <CirclePlus />
+        </Button>
       </CardContent>
       <CardFooter>
         <NewFormFooter />
