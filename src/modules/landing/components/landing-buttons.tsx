@@ -6,9 +6,11 @@ function LandingButtons() {
   return (
     <div>
       <Link className={buttonVariants({ variant: "outline" })} href="/new-form">
-        Demo
+        Try Demo
       </Link>
-      <Link href="/new-form"></Link>
+      <Link className={buttonVariants({ variant: "outline" })} href="/login">
+        Login
+      </Link>
     </div>
   );
 }
